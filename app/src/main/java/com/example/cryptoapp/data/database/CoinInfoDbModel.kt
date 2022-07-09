@@ -2,8 +2,6 @@ package com.example.cryptoapp.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.cryptoapp.data.network.ApiFactory.BASE_IMAGE_URL
-import com.example.cryptoapp.utils.convertTimestampToTime
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -17,5 +15,5 @@ data class CoinInfoDbModel(
     val highDay:String?,
     val lowDay:String?,
     val lastMarket:String?,
-    val imageUrl:String?
+    val imageUrl:String
 )
