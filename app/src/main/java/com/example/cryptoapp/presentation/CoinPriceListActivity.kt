@@ -22,11 +22,11 @@ class CoinPriceListActivity : AppCompatActivity() {
         val adapter = CoinInfoAdapter(this)
         adapter.onCoinClickListener = object : CoinInfoAdapter.OnCoinClickListener {
             override fun onCoinClick(coinInfo: CoinInfo) {
-                val intent = CoinDetailActivity.newIntent(
-                    this@CoinPriceListActivity,
-                    coinInfo.fromSymbol
-                )
-                startActivity(intent)
+                if (isOnePaneMode()){
+                    launchDetailActivity(coinInfo.fromSymbol)
+                } else {
+                    launchDetailFragment(coinInfo.fromSymbol)
+                }
             }
         }
         binding.rvCoinPriceList.adapter = adapter
@@ -36,4 +36,24 @@ class CoinPriceListActivity : AppCompatActivity() {
             adapter.submitList(it)
         }
     }
+
+    private fun isOnePaneMode() = binding.fragmentContainerView == null
+
+    private fun launchDetailActivity(fromSymbol: String){
+        val intent = CoinDetailActivity.newIntent(
+            this@CoinPriceListActivity,
+            fromSymbol
+        )
+        startActivity(intent)
+    }
+
+    private fun launchDetailFragment(fromSymbol:String){
+        supportFragmentManager.popBackStack()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container_view,CoinDetailFragment.newInstance(fromSymbol))
+            .addToBackStack(null)
+            .commit()
+    }
+
 }
