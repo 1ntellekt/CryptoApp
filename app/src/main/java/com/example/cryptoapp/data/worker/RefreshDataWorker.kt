@@ -1,6 +1,7 @@
 package com.example.cryptoapp.data.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import com.example.cryptoapp.data.database.AppDatabase
 import com.example.cryptoapp.data.mapper.CoinMapper
@@ -20,12 +21,15 @@ class RefreshDataWorker(
         while (true) {
             try {
                 val topCoins = apiService.getTopCoinsInfo(limit = 50)
+                //Log.d("fResponse", topCoins.toString())
                 val fSymbols = mapper.mapNamesListToString(topCoins)
                 val jsonContainer = apiService.getFullPriceList(fSyms = fSymbols)
+                //Log.d("sResponse", jsonContainer.toString())
                 val coinInfoListDto = mapper.mapJsonContainerToListCoinInfo(jsonContainer)
                 val dbModelList = coinInfoListDto.map { mapper.mapDtoToDbModel(it) }
                 coinInfoDao.insertPriceList(dbModelList)
             } catch (e: Exception) {
+                //Log.e("error", e.message.toString())
             }
             delay(10000)
         }
